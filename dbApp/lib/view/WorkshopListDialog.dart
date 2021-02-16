@@ -30,9 +30,14 @@ class WorkshopListDialog {
                 child: Text('Save Workshop'),
                 onPressed: () async {
                   await db.openDB();
+
                   wk.name = txtName.text;
                   wk.priority = int.parse(txtPriority.text);
-                  db.insertWorkshop(wk);
+                  if (isNew) {
+                    db.insertWorkshop(wk);
+                  } else {
+                    db.updateWorkshop(wk);
+                  }
                   Navigator.pop(context);
                 }),
           ],

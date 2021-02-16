@@ -65,6 +65,11 @@ class dbHelper {
     });
   }
 
+  Future<void> updateWorkshop(Workshop_List wk) async {
+    await db
+        .update("Workshops", wk.toMap(), where: "id = ?", whereArgs: [wk.id]);
+  }
+
   Future<int> deleteWorkshop(Workshop_List wk) async {
     int result = await db
         .delete('trainings', where: "idWorkshop = ?", whereArgs: [wk.id]);

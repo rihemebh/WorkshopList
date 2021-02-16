@@ -27,6 +27,9 @@ class _WKListState extends State<WKList> {
   Future showData() async {
     await db.openDB();
     workshopsList = await db.getList();
+    // await db
+    //  .updateWorkshop(Workshop_List(id: 1, name: "flutter7", priority: 3));
+
     setState(() {
       workshopsList = workshopsList;
     });
@@ -45,13 +48,28 @@ class _WKListState extends State<WKList> {
             return Dismissible(
               key: Key(workshopsList[index].name),
               onDismissed: (direction) {
-               // String strName = workshopsList[index].name;
+                // String strName = workshopsList[index].name;
                 db.deleteWorkshop(workshopsList[index]);
                 setState(() {
                   workshopsList.removeAt(index);
                 });
               },
-              child: ListTile(title: Text((workshopsList[index].name))),
+              child: ListTile(
+                title: Column(
+                  children: [
+                    Text((workshopsList[index].name)),
+                    RaisedButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  dialog.buidDialog(
+                                      context, workshopsList[index], false));
+                        },
+                        child: Icon(Icons.update)),
+                  ],
+                ),
+              ),
             );
           }),
       floatingActionButton: FloatingActionButton(
