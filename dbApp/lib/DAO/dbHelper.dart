@@ -13,9 +13,9 @@ class dbHelper {
       db = await openDatabase(join(await getDatabasesPath(), 'workshops.db'),
           onCreate: (database, version) {
         database.execute(
-            'CREATE TABLE workshops(id INTEGER PRIMARY KEY, name TEXT, priority INTEGER)');
+            'CREATE TABLE workshops(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, priority INTEGER)');
         database.execute(
-            'CREATE TABLE trainings(id INTEGER PRIMARY KEY, idWorkshop INTEGER, name TEXT, trainer TEXT, note INTEGER, ' +
+            'CREATE TABLE trainings(id INTEGER PRIMARY KEY AUTOINCREMENT, idWorkshop INTEGER, name TEXT, trainer TEXT, note INTEGER, ' +
                 'FOREIGN KEY(idWorkshop) REFERENCES workshops(id))');
       }, version: version);
     }
@@ -49,6 +49,28 @@ class dbHelper {
         priority: maps[i]['priority'],
       );
     });
+  }
+
+  Future<List<Training>> getTraining(int id) async {
+    final List<Map<String, dynamic>> result = await db.query('trainings',
+        where: 'idWorkshop = ?', whereArgs: [id], limit: 1);
+    return List.generate(result.length, (index) {
+      return Training(
+        id: result[index]['id'],
+        name: result[index]['name'],
+        note: result[index]['note'],
+        idWorkshop: result[index]['idWorkshop'],
+        trainer: result[index]['trainer'],
+      );
+    });
+  }
+
+  Future<int> deleteWorkshop(Workshop_List wk) async {
+    int result = await db
+        .delete('trainings', where: "idWorkshop = ?", whereArgs: [wk.id]);
+    result = await db.delete('workshops', where: "id= ?", whereArgs: [wk.id]);
+
+    return result;
   }
 }
 
