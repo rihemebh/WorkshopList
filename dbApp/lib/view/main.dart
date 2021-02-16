@@ -1,6 +1,6 @@
 import 'package:dbApp/DAO/dbHelper.dart';
 import 'package:dbApp/models/Workshop_List.dart';
-//import 'package:dbApp/models/Training.dart';
+import 'package:dbApp/view/TrainingScreen.dart';
 import 'package:dbApp/view/WorkshopListDialog.dart';
 import 'package:flutter/material.dart';
 
@@ -45,29 +45,39 @@ class _WKListState extends State<WKList> {
       body: ListView.builder(
           itemCount: (workshopsList != null) ? workshopsList.length : 0,
           itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-              key: Key(workshopsList[index].name),
-              onDismissed: (direction) {
-                // String strName = workshopsList[index].name;
-                db.deleteWorkshop(workshopsList[index]);
-                setState(() {
-                  workshopsList.removeAt(index);
-                });
+            return RaisedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TrainingScreen(
+                              workshop: workshopsList[index],
+                            )));
               },
-              child: ListTile(
-                title: Column(
-                  children: [
-                    Text((workshopsList[index].name)),
-                    RaisedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  dialog.buidDialog(
-                                      context, workshopsList[index], false));
-                        },
-                        child: Icon(Icons.update)),
-                  ],
+              child: Dismissible(
+                key: Key(workshopsList[index].name),
+                onDismissed: (direction) {
+                  // String strName = workshopsList[index].name;
+                  db.deleteWorkshop(workshopsList[index]);
+                  setState(() {
+                    workshopsList.removeAt(index);
+                  });
+                },
+                child: ListTile(
+                  title: Column(
+                    children: [
+                      Text((workshopsList[index].name)),
+                      RaisedButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    dialog.buidDialog(
+                                        context, workshopsList[index], false));
+                          },
+                          child: Icon(Icons.update)),
+                    ],
+                  ),
                 ),
               ),
             );

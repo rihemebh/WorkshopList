@@ -37,6 +37,8 @@ class dbHelper {
           tr.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
+
+    print("training added");
     return id;
   }
 
@@ -52,8 +54,8 @@ class dbHelper {
   }
 
   Future<List<Training>> getTraining(int id) async {
-    final List<Map<String, dynamic>> result = await db.query('trainings',
-        where: 'idWorkshop = ?', whereArgs: [id], limit: 1);
+    final List<Map<String, dynamic>> result =
+        await db.query('trainings', where: 'idWorkshop = ?', whereArgs: [id]);
     return List.generate(result.length, (index) {
       return Training(
         id: result[index]['id'],
