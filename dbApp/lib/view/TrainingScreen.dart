@@ -41,9 +41,30 @@ class _TrainingScreenState extends State<TrainingScreen> {
         title: Text(workshop.name),
       ),
       body: ListView.builder(
-          itemCount: (trainings != null) ? trainings.length : 0,
-          itemBuilder: (BuildContext context, int i) =>
-              ListTile(title: Text((trainings[i].name)))),
+        itemCount: (trainings != null) ? trainings.length : 0,
+        itemBuilder: (BuildContext context, int i) {
+          return Dismissible(
+            key: Key(trainings[i].id.toString()),
+            onDismissed: (direction) {
+              db.deleteTraining(trainings[i]);
+              setState(() {
+                trainings.removeAt(i);
+              });
+            },
+            child: Container(
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => dialog.buidDialog(
+                          context, workshop, trainings[i], false));
+                },
+                child: ListTile(title: Text((trainings[i].name))),
+              ),
+            ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(

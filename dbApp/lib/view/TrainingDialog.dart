@@ -12,8 +12,9 @@ class TrainingDialog {
       BuildContext context, Workshop_List wk, Training tr, bool isNew) {
     dbHelper db = dbHelper();
     if (!isNew) {
-      txtName.text = wk.name;
-      txtTrainer.text = wk.priority.toString();
+      txtName.text = tr.name;
+      txtTrainer.text = tr.trainer.toString();
+      txtNote.text = tr.note;
     }
     return AlertDialog(
       title: Text((isNew) ? "Add new training" : "Edit the training"),
@@ -44,7 +45,7 @@ class TrainingDialog {
                   if (isNew) {
                     db.insertTraining(tr);
                   } else {
-                    db.updateWorkshop(wk);
+                    db.updateTraining(tr);
                   }
                   Navigator.pop(context);
                 }),
